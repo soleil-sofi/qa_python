@@ -8,20 +8,20 @@ class TestBooksCollector:
     def test_add_new_book_unique_valid_name_book_added(self, name):
         collector = BooksCollector()
         collector.add_new_book(name)
-        assert name in collector.books_genre.keys() and collector.books_genre[name] == ''
+        assert name in collector.get_books_genre() and collector.get_book_genre(name) == ''
 
     @pytest.mark.parametrize("name", ["", "Старик, который читал любовные романы...."],
                              ids=['empty_name', 'name_of_41_characters'])
     def test_add_new_book_unique_invalid_name_book_added(self, name):
         collector = BooksCollector()
         collector.add_new_book(name)
-        assert name not in collector.books_genre.keys()
+        assert name not in collector.get_books_genre()
 
     @pytest.mark.parametrize("genre", BooksCollector().genre)
     def test_set_book_genre_for_existing_book_and_genre_successfully(self, genre, object_with_book):
         name = list(object_with_book.books_genre.keys())[0]
         object_with_book.set_book_genre(name, genre)
-        assert object_with_book.books_genre[name] == genre
+        assert object_with_book.get_book_genre(name) == genre
 
     def test_get_book_genre_for_existing_book_successfully(self, object_with_book):
         name = list(object_with_book.books_genre.keys())[0]
@@ -42,14 +42,14 @@ class TestBooksCollector:
 
     def test_add_book_in_favorites_it_added(self, object_with_several_books):
         object_with_several_books.add_book_in_favorites("Оно")
-        assert "Оно" in object_with_several_books.favorites
+        assert "Оно" in object_with_several_books.get_list_of_favorites_books()
 
     def test_delete_book_from_favorites_it_deleted(self, object_with_several_books):
         object_with_several_books.add_book_in_favorites("Оно")
         object_with_several_books.add_book_in_favorites("Гарри Поттер")
         object_with_several_books.delete_book_from_favorites("Оно")
-        assert ("Оно" not in object_with_several_books.favorites and "Гарри Поттер" in
-                object_with_several_books.favorites)
+        assert ("Оно" not in object_with_several_books.get_list_of_favorites_books() and "Гарри Поттер" in
+                object_with_several_books.get_list_of_favorites_books())
 
     def test_get_list_of_favorites_books(self, object_with_several_books):
         object_with_several_books.add_book_in_favorites("Оно")
